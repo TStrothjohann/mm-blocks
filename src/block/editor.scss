@@ -1,0 +1,14 @@
+/**
+ * #.# Editor Styles
+ *
+ * CSS for just Backend enqueued after style.scss
+ * which makes it higher in priority.
+ */
+
+.wp-block-cgb-block-my-block  {
+	background: rgba(139, 139, 150, 0.1);
+	padding: 1em;
+    min-height: 200px;
+    width: 100%;
+}
+
