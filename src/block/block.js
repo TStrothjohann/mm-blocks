@@ -12,16 +12,13 @@ import './editor.scss';
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { 
-	TextControl, 
 	Button
 } = wp.components;
 
 const {
-    RichText,
-    InspectorControls,
-    ColorPalette,
     MediaUpload,
-    MediaUploadCheck
+    MediaUploadCheck,
+    URLInput
 } = wp.editor;
 /**
  * Register: aa Gutenberg Block.
@@ -47,34 +44,36 @@ registerBlockType( 'cgb/block-my-block', {
 		__( 'create-guten-block' ),
 	],
 
-
-	// We need the following attributes:
-	// 1. Link: buy this edition (print) dashicons-book
-	// 2. Link: buy this edition epaper dashicons-tablet
-	// 3. Link: subscriptions (Default: https://www.newsroom.de/shop/abos/medium-magazin/) dashicons-money
-	// 4. Link: table of contents (PDF)
-
 	attributes: {
 		linkBuyPrint: {
-			type: 'string'
+			type: 'string',
+			// selector: 'a.linkBuyPrint',
+			// source: 'attribute',
+			// attribute: 'href'
 		},
 		linkBuyEpaper: {
-			type: 'string'
+			type: 'string',
+			// selector: 'a.linkBuyEpaper',
+			// source: 'attribute',
+			// attribute: 'href'
 		},
 		linkSubscriptions: {
 			type: 'string',
-			source: 'href',
-			selector: 'a.linkSubscriptions'
+			// selector: 'a.linkSubscriptions',
+			// source: 'attribute',
+			// attribute: 'href'
 		},
 		linkTableOfContents: {
 			type: 'string',
-			source: 'href',
-			selector: 'a.linkTableOfContents'
+			// selector: 'a.linkTableOfContents',
+			// source: 'attribute',
+			// attribute: 'href'
 		},
 		statusOfInput: {
 			type: 'string',
-			source: 'data-isset',
-			selector: 'a.linkTableOfContents'
+			// selector: 'a.linkTableOfContents',
+			// source: 'attribute',
+			// attribute: 'data-isset'
 		}
 	},
 
@@ -86,28 +85,21 @@ registerBlockType( 'cgb/block-my-block', {
 	 *
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
-    edit(props) {
-    	const { setAttributes, attributes } = props;
+    edit: function( props ) {	
 
    	    function onLinkTableOfContentsChange(pdf) {
             if (pdf.url) {
-            	setAttributes({
+            	props.setAttributes({
 	                linkTableOfContents: pdf.url,
 	                statusOfInput: 'dashicons-yes' 
             	})
             }else{
-            	setAttributes({
+            	props.setAttributes({
 	                linkTableOfContents: "",
 	                statusOfInput: 'dashicons-no' 
             	})
             }
 
-        }
-
-        function onlinkSubscriptionsChange(changes) {
-            setAttributes({
-                linkSubscriptions: changes
-            });
         }
 
         return (
@@ -120,24 +112,39 @@ registerBlockType( 'cgb/block-my-block', {
 				            label="Inhaltsverzeichnis"
 				            onSelect={ onLinkTableOfContentsChange }
 				            allowedTypes={ ["application/pdf"] }
-				            value={attributes.linkTableOfContents}
+				            value={props.attributes.linkTableOfContents}
 				            render={({ open }) => (
 				                <div>
 					                <Button className="is-button is-default" onClick={open}>
-					                    Inhaltsverzeichnis hochladen
-					                    <span className={ "dashicons " + attributes.statusOfInput } ></span>
-					                </Button>
-					                
+					                    Inhaltsverzeichnis hochladen (PDF)
+					                    <span className={ "dashicons " + props.attributes.statusOfInput } ></span>
+					                </Button> 
 					            </div>
 				            )}
 				        />
 				    </MediaUploadCheck>
 		            <br />
-		            <TextControl
-		            	label="Link zum Abo"
-						value={attributes.linkSubscriptions}
-						onChange={onlinkSubscriptionsChange}
-		            />
+		            <div className="components-base-control components-base-control__field">
+			            <label className="components-base-control__label">Abo Link</label>
+			            <URLInput
+							value={ props.attributes.linkSubscriptions }
+							onChange={ ( url ) => props.setAttributes( { linkSubscriptions: url } ) }
+						/>
+					</div>
+		            <div className="components-base-control components-base-control__field">
+			            <label className="components-base-control__label">Heft kaufen Link</label>
+			            <URLInput
+							value={ props.attributes.linkBuyPrint }
+							onChange={ ( url ) => props.setAttributes( { linkBuyPrint: url } ) }
+						/>
+					</div>
+		            <div className="components-base-control components-base-control__field">
+			            <label className="components-base-control__label">Epaper Link</label>
+			            <URLInput
+							value={ props.attributes.linkBuyEpaper }
+							onChange={ ( url ) => props.setAttributes( { linkBuyEpaper: url } ) }
+						/>
+					</div>
 	    		</div>
         );
     },
@@ -151,33 +158,75 @@ registerBlockType( 'cgb/block-my-block', {
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
 	save: function( props ) {
-		return (
-			<div>
-				<ul className="list-group">				  
-				  <li className="list-group-item">
-				  	<span className="dashicons dashicons-list-view"></span>
-				  	<a data-isset={ props.attributes.statusOfInput } className="linkTableOfContents" href={ props.attributes.linkTableOfContents } >
-					  	Inhaltsverzeichnis (PDF)
-				  	</a>
-				  </li>
-				  <li className="list-group-item">
-				  	<span className="dashicons dashicons-book"></span>
-				  	<a href={ props.attributes.linkBuyPrint }>
-					  	Heft kaufen
-				  	</a>
-				  </li>
-				  <li className="list-group-item">
+		
+		function TableOfContents(){
+			if (props.attributes.linkTableOfContents) {
+				return (
+					<li className="list-group-item">
+					  	<span className="dashicons dashicons-list-view"></span>
+					  	<a data-isset={ props.attributes.statusOfInput } className="linkTableOfContents" href={ props.attributes.linkTableOfContents } >
+						  	Inhaltsverzeichnis (PDF)
+					  	</a>
+					</li>
+				)
+			}else{
+				return null;
+			}
+		}
+
+		function BuyPrint(){
+			if (props.attributes.linkBuyPrint) {
+				return (
+					<li className="list-group-item">
+				  		<span className="dashicons dashicons-book"></span>
+				  		<a className="linkBuyPrint" href={ props.attributes.linkBuyPrint }>
+					  		Heft kaufen
+				  		</a>
+				  	</li>					
+				)
+			}else{
+				return null;
+			}
+		}
+
+
+		function BuyEpaper(){
+			if (props.attributes.linkBuyEpaper) {
+				return(
+					<li className="list-group-item">
 					<span className="dashicons dashicons-tablet"></span>
-				  	<a href={ props.attributes.linkBuyEpaper }>
+						<a href={ props.attributes.linkBuyEpaper }>
 					  	Epaper kaufen
-				  	</a>
-				  </li>
+						</a>
+					</li>
+				)
+			}else{
+				return null;
+			}			
+		}
+
+		function Abo(){
+			if (props.attributes.linkSubscriptions) {
+				return(
 				  <li className="list-group-item">
 				  	<span className="dashicons dashicons-money"></span>
 				  	<a className="linkSubscriptions" href={ props.attributes.linkSubscriptions }>
 					  	Abos
 				  	</a>
 				  </li>
+				)
+			}else{
+				return null;
+			}			
+		}
+
+		return (
+			<div>
+				<ul className="list-group">				  
+				  <TableOfContents />
+				  <BuyPrint />
+				  <BuyEpaper />
+				  <Abo />
 				</ul>
 			</div>
 		);
