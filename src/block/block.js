@@ -14,11 +14,14 @@ const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.b
 const { 
 	Button
 } = wp.components;
+const { Fragment } = wp.element;
 
 const {
     MediaUpload,
     MediaUploadCheck,
-    URLInput
+    URLInput,
+    BlockControls,
+    AlignmentToolbar
 } = wp.editor;
 /**
  * Register: aa Gutenberg Block.
@@ -59,7 +62,10 @@ registerBlockType( 'cgb/block-my-block', {
 		},
 		statusOfInput: {
 			type: 'string'
-		}
+		},
+		alignment: {
+            type: 'string',
+        }
 	},
 
 	/**
@@ -87,50 +93,62 @@ registerBlockType( 'cgb/block-my-block', {
 
         }
 
+        function onChangeAlignment( newAlignment ) {
+            props.setAttributes( { alignment: newAlignment } );
+        }
+
         return (
-        		<div className={props.className}>
-		           	<div className="components-placeholder__label">
-		           		Medium Magazin Promo Links
-		           	</div> 
-	        		<MediaUploadCheck>
-				        <MediaUpload
-				            label="Inhaltsverzeichnis"
-				            onSelect={ onLinkTableOfContentsChange }
-				            allowedTypes={ ["application/pdf"] }
-				            value={props.attributes.linkTableOfContents}
-				            render={({ open }) => (
-				                <div>
-					                <Button className="is-button is-default" onClick={open}>
-					                    Inhaltsverzeichnis hochladen (PDF)
-					                    <span className={ "dashicons " + props.attributes.statusOfInput } ></span>
-					                </Button> 
-					            </div>
-				            )}
-				        />
-				    </MediaUploadCheck>
-		            <br />
-		            <div className="components-base-control components-base-control__field">
-			            <label className="components-base-control__label">Abo Link</label>
-			            <URLInput
-							value={ props.attributes.linkSubscriptions }
-							onChange={ ( url ) => props.setAttributes( { linkSubscriptions: url } ) }
-						/>
-					</div>
-		            <div className="components-base-control components-base-control__field">
-			            <label className="components-base-control__label">Heft kaufen Link</label>
-			            <URLInput
-							value={ props.attributes.linkBuyPrint }
-							onChange={ ( url ) => props.setAttributes( { linkBuyPrint: url } ) }
-						/>
-					</div>
-		            <div className="components-base-control components-base-control__field">
-			            <label className="components-base-control__label">Epaper Link</label>
-			            <URLInput
-							value={ props.attributes.linkBuyEpaper }
-							onChange={ ( url ) => props.setAttributes( { linkBuyEpaper: url } ) }
-						/>
-					</div>
-	    		</div>
+        		<Fragment>
+	        		<BlockControls>
+	                    <AlignmentToolbar
+	                        value={ props.attributes.alignment }
+	                        onChange={ onChangeAlignment }
+	                    />
+	                </BlockControls>
+	        		<div className={props.className}>
+			           	<div className="components-placeholder__label">
+			           		Medium Magazin Promo Links
+			           	</div> 
+		        		<MediaUploadCheck>
+					        <MediaUpload
+					            label="Inhaltsverzeichnis"
+					            onSelect={ onLinkTableOfContentsChange }
+					            allowedTypes={ ["application/pdf"] }
+					            value={props.attributes.linkTableOfContents}
+					            render={({ open }) => (
+					                <div>
+						                <Button className="is-button is-default" onClick={open}>
+						                    Inhaltsverzeichnis hochladen (PDF)
+						                    <span className={ "dashicons " + props.attributes.statusOfInput } ></span>
+						                </Button> 
+						            </div>
+					            )}
+					        />
+					    </MediaUploadCheck>
+			            <br />
+			            <div className="components-base-control components-base-control__field">
+				            <label className="components-base-control__label">Abo Link</label>
+				            <URLInput
+								value={ props.attributes.linkSubscriptions }
+								onChange={ ( url ) => props.setAttributes( { linkSubscriptions: url } ) }
+							/>
+						</div>
+			            <div className="components-base-control components-base-control__field">
+				            <label className="components-base-control__label">Heft kaufen Link</label>
+				            <URLInput
+								value={ props.attributes.linkBuyPrint }
+								onChange={ ( url ) => props.setAttributes( { linkBuyPrint: url } ) }
+							/>
+						</div>
+			            <div className="components-base-control components-base-control__field">
+				            <label className="components-base-control__label">Epaper Link</label>
+				            <URLInput
+								value={ props.attributes.linkBuyEpaper }
+								onChange={ ( url ) => props.setAttributes( { linkBuyEpaper: url } ) }
+							/>
+						</div>
+		    		</div>
+	    		</Fragment>
         );
     },
 
@@ -192,8 +210,23 @@ registerBlockType( 'cgb/block-my-block', {
 			}			
 		}
 
+		function translateAlignmentToStyle(alignment) {
+			switch(alignment){
+				case 'left':
+					return "list-group col-12 col-md-6 float-left my-2 mr-2"
+					break;
+				case 'right':
+					return "list-group col-12 col-md-6 float-right my-2 ml-2"
+					break;
+				default:
+					return "list-group col-12 my-2"
+				break;
+			}
+		}
+
+		// ToDo: make the links a property of each component instead of taking them from props in scope
 		return (
-			<div className="list-group col-12 col-md-6">				  
+			<div className={ translateAlignmentToStyle( props.attributes.alignment ) }>				  
 			  <TableOfContents />
 			  <BuyPrint />
 			  <BuyEpaper />
