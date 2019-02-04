@@ -46,34 +46,19 @@ registerBlockType( 'cgb/block-my-block', {
 
 	attributes: {
 		linkBuyPrint: {
-			type: 'string',
-			// selector: 'a.linkBuyPrint',
-			// source: 'attribute',
-			// attribute: 'href'
+			type: 'string'
 		},
 		linkBuyEpaper: {
-			type: 'string',
-			// selector: 'a.linkBuyEpaper',
-			// source: 'attribute',
-			// attribute: 'href'
+			type: 'string'
 		},
 		linkSubscriptions: {
-			type: 'string',
-			// selector: 'a.linkSubscriptions',
-			// source: 'attribute',
-			// attribute: 'href'
+			type: 'string'
 		},
 		linkTableOfContents: {
-			type: 'string',
-			// selector: 'a.linkTableOfContents',
-			// source: 'attribute',
-			// attribute: 'href'
+			type: 'string'
 		},
 		statusOfInput: {
-			type: 'string',
-			// selector: 'a.linkTableOfContents',
-			// source: 'attribute',
-			// attribute: 'data-isset'
+			type: 'string'
 		}
 	},
 
@@ -162,12 +147,9 @@ registerBlockType( 'cgb/block-my-block', {
 		function TableOfContents(){
 			if (props.attributes.linkTableOfContents) {
 				return (
-					<li className="list-group-item">
-					  	<span className="dashicons dashicons-list-view"></span>
-					  	<a data-isset={ props.attributes.statusOfInput } className="linkTableOfContents" href={ props.attributes.linkTableOfContents } >
-						  	Inhaltsverzeichnis (PDF)
-					  	</a>
-					</li>
+				  	<a data-isset={ props.attributes.statusOfInput } className="list-group-item list-group-item-action linkTableOfContents" href={ props.attributes.linkTableOfContents } >
+					  	<span className="dashicons dashicons-list-view"></span> Inhaltsverzeichnis (PDF)
+				  	</a>
 				)
 			}else{
 				return null;
@@ -177,28 +159,21 @@ registerBlockType( 'cgb/block-my-block', {
 		function BuyPrint(){
 			if (props.attributes.linkBuyPrint) {
 				return (
-					<li className="list-group-item">
-				  		<span className="dashicons dashicons-book"></span>
-				  		<a className="linkBuyPrint" href={ props.attributes.linkBuyPrint }>
-					  		Heft kaufen
-				  		</a>
-				  	</li>					
+					<a className="list-group-item list-group-item-action" href={ props.attributes.linkBuyPrint }>
+						<span className="dashicons dashicons-book"></span> Heft kaufen
+					</a>
 				)
 			}else{
 				return null;
 			}
 		}
 
-
 		function BuyEpaper(){
 			if (props.attributes.linkBuyEpaper) {
 				return(
-					<li className="list-group-item">
-					<span className="dashicons dashicons-tablet"></span>
-						<a href={ props.attributes.linkBuyEpaper }>
-					  	Epaper kaufen
-						</a>
-					</li>
+					<a className="list-group-item list-group-item-action" href={ props.attributes.linkBuyEpaper }>
+					<span className="dashicons dashicons-tablet"></span> Epaper kaufen
+					</a>
 				)
 			}else{
 				return null;
@@ -207,13 +182,10 @@ registerBlockType( 'cgb/block-my-block', {
 
 		function Abo(){
 			if (props.attributes.linkSubscriptions) {
-				return(
-				  <li className="list-group-item">
-				  	<span className="dashicons dashicons-money"></span>
-				  	<a className="linkSubscriptions" href={ props.attributes.linkSubscriptions }>
-					  	Abos
-				  	</a>
-				  </li>
+				return( 	
+				  	<a className="list-group-item list-group-item-action" href={ props.attributes.linkSubscriptions }>
+					  	<span className="dashicons dashicons-money"></span> Abos
+				  	</a>				  
 				)
 			}else{
 				return null;
@@ -221,13 +193,11 @@ registerBlockType( 'cgb/block-my-block', {
 		}
 
 		return (
-			<div>
-				<ul className="list-group">				  
-				  <TableOfContents />
-				  <BuyPrint />
-				  <BuyEpaper />
-				  <Abo />
-				</ul>
+			<div className="list-group col-12 col-md-6">				  
+			  <TableOfContents />
+			  <BuyPrint />
+			  <BuyEpaper />
+			  <Abo />
 			</div>
 		);
 	},
