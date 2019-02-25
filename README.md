@@ -1,6 +1,13 @@
 This project was bootstrapped with [Create Guten Block](https://github.com/ahmadawais/create-guten-block).
 
-Below you will find some information on how to run scripts.
+## mm-blocks provides WP Gutenberg blocks for the mmbeta theme
+Currently the following blocks are included:
+* mm-showcase provides an editor form that lets the user add a table of contents PDF and links to shops offering the showcased edition of medium magazin (epaper, subscription, print editions).
+* mm-teaser is a very simple block adding a correctly styled teaser for a given post. It's meant to be added at the beginning of each post - technically it can be placed anywhere in the post.
+
+
+
+*Below you will find some information on how to run scripts.*
 
 >You can find the most recent version of this guide [here](https://github.com/ahmadawais/create-guten-block).
 
