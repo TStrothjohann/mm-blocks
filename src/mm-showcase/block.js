@@ -36,26 +36,29 @@ const {
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType( 'cgb/block-my-block', {
+registerBlockType( 'mm/showcase', {
 	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-	title: __( 'my-block - CGB Block' ), // Block title.
-	icon: 'shield', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
-	category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
+	title: __( 'MM Showcase' ), // Block title.
+	icon: 'money', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
+	category: 'mm', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 	keywords: [
-		__( 'my-block — CGB Block' ),
-		__( 'CGB Example' ),
-		__( 'create-guten-block' ),
+		__( 'Medium Magazin' ),
+		__( 'Showcase' ),
+		__( 'Abo' ),
 	],
 
 	attributes: {
 		linkBuyPrint: {
-			type: 'string'
+			type: 'string',
+			default: 'https://shop.oberauer.com/medien/medium-magazin/'
 		},
 		linkBuyEpaper: {
-			type: 'string'
+			type: 'string',
+			default: 'https://shop.oberauer.com/medien/medium-magazin/'
 		},
 		linkSubscriptions: {
-			type: 'string'
+			type: 'string',
+			default: 'https://shop.oberauer.com/medien/medium-magazin/'
 		},
 		linkTableOfContents: {
 			type: 'string'
@@ -175,21 +178,17 @@ registerBlockType( 'cgb/block-my-block', {
 		}
 
 		function BuyPrint(){
-			if (props.attributes.linkBuyPrint) {
 				return (
-					<a className="list-group-item list-group-item-action" href={ props.attributes.linkBuyPrint }>
+					<a className="list-group-item list-group-item-action" href={ props.attributes.linkBuyPrint ? props.attributes.linkBuyPrint : props.attributes.linkBuyPrint.default }>
 						<span className="dashicons dashicons-book"></span> Heft kaufen
 					</a>
 				)
-			}else{
-				return null;
-			}
 		}
 
 		function BuyEpaper(){
-			if (props.attributes.linkBuyEpaper) {
+			if (props.attributes.linkBuyEpaper !== "") {
 				return(
-					<a className="list-group-item list-group-item-action" href={ props.attributes.linkBuyEpaper }>
+					<a className="list-group-item list-group-item-action" href={ props.attributes.linkBuyEpaper ? props.attributes.linkBuyEpaper : props.attributes.linkBuyEpaper.default }>
 					<span className="dashicons dashicons-tablet"></span> Epaper kaufen
 					</a>
 				)
@@ -199,9 +198,9 @@ registerBlockType( 'cgb/block-my-block', {
 		}
 
 		function Abo(){
-			if (props.attributes.linkSubscriptions) {
+			if (props.attributes.linkSubscriptions !== "") {
 				return( 	
-				  	<a className="list-group-item list-group-item-action" href={ props.attributes.linkSubscriptions }>
+				  	<a className="list-group-item list-group-item-action" href={ props.attributes.linkSubscriptions ? props.attributes.linkSubscriptions : props.attributes.linkSubscriptions.default }>
 					  	<span className="dashicons dashicons-money"></span> Abos
 				  	</a>				  
 				)

@@ -9,3 +9,18 @@
  *
  * CSS for both Frontend+Backend.
  */
+/**
+ * #.# Common SCSS
+ *
+ * Can include things like variables and mixins
+ * that are used across the project.
+*/
+/**
+ * #.# Styles
+ *
+ * CSS for both Frontend+Backend.
+ */
+.wp-block-mm-teaser {
+  font-family: 'Leitura Sans';
+  line-height: 1.8rem;
+  font-size: 1.3rem; }

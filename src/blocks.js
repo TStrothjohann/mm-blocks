@@ -9,4 +9,5 @@
  * Webpack is compiling as the input file.
  */
 
-import './block/block.js';
+import './mm-showcase/block.js';
+import './mm-teaser/block.js';

@@ -15,3 +15,13 @@
   padding: 1em;
   min-height: 200px;
   width: 100%; }
+/**
+ * #.# Common SCSS
+ *
+ * Can include things like variables and mixins
+ * that are used across the project.
+*/
+.wp-block-mm-teaser {
+  background: rgba(139, 139, 150, 0.1);
+  padding: 1em !important;
+  width: 100%; }
